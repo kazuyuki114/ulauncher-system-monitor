@@ -21,7 +21,14 @@ Ulauncher System Monitor is a Ulauncher extension that provides real‑time syst
 - Python 3.x
 - [psutil](https://github.com/giampaolo/psutil)
 - [Netifaces](https://github.com/raphdg/netifaces)
+- GNOME System Monitor
+
 ## Installation
+
+- Install GNOME Systom Monitor
+  ```bash
+  snap install gnome-systom-monitor
+  ```
 - Install all required packages using pip:
   ```bash
   pip install psutil netifaces

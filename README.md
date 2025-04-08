@@ -22,3 +22,9 @@ Ulauncher System Monitor is a Ulauncher extension that provides real‑time syst
 - [psutil](https://github.com/giampaolo/psutil)
 
 ## Installation
+
+- Open **Ulauncher**
+- Click on the **cog wheel** to open your preferences
+- Click on the **EXTENSIONS** tab
+- Click on **Add extension**
+- Paste this repository's URL (https://github.com/kazuyuki114/ulauncher-system-monitor.git)

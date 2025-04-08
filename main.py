@@ -9,6 +9,7 @@ from ulauncher.api.shared.item.ExtensionResultItem import ExtensionResultItem
 from ulauncher.api.shared.action.RenderResultListAction import RenderResultListAction
 from ulauncher.api.shared.action.HideWindowAction import HideWindowAction
 from ulauncher.api.shared.action.CopyToClipboardAction import CopyToClipboardAction
+from jedi.api.classes import Name
 
 logger = logging.getLogger(__name__)
 
@@ -66,15 +67,15 @@ class SystemMonitorEventListener(EventListener):
 
             items.append(ExtensionResultItem(
                 icon='images/battery.png',
-                name=f"Battery: {round(battery.percent, 2)}%({mode}) | Time left: {time_left}",
-                description="Battery status",
+                name="Battery status",
+                description=f"Battery: {round(battery.percent, 2)}%({mode}) | Time left: {time_left}",
                 on_enter=HideWindowAction()
             ))
 
         items.append(ExtensionResultItem(
             icon='images/network.png',
-            name=f"Network: Sent {self._bytes_to_gb(round(net.bytes_sent, 2))}, Received {self._bytes_to_gb(round(net.bytes_recv, 2))}",
-            description="Network activity",
+            Name="Network activity",
+            description=f"Network: Sent {self._bytes_to_gb(round(net.bytes_sent, 2))}, Received {self._bytes_to_gb(round(net.bytes_recv, 2))}",
             on_enter=HideWindowAction()
         ))
         items.append(ExtensionResultItem(

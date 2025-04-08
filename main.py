@@ -35,6 +35,9 @@ class SystemMonitorEventListener(EventListener):
         # Memory metrics
         memory = psutil.virtual_memory()
 
+        # Swap metrics
+        swap = psutil.swap_memory()
+
         # Disk metrics
         disk = psutil.disk_usage('/')
 
@@ -63,13 +66,19 @@ class SystemMonitorEventListener(EventListener):
         items.append(ExtensionResultItem(
             icon='images/ram.png',
             name=f"Memory: {memory.percent}%",
-            description=f"Used: {self._bytes_to_readable(memory.used)}GB / Total: {self._bytes_to_readable(memory.total)}GB",
+            description=f"Used: {self._bytes_to_readable(memory.used)} / Total: {self._bytes_to_readable(memory.total)}",
+            on_enter=HideWindowAction()
+        ))
+        items.append(ExtensionResultItem(
+            icon='images/swap.svg',
+            name=f"Swap: {swap.percent}%",
+            description=f"Used: {self._bytes_to_readable(swap.used)} / Total: {self._bytes_to_readable(swap.total)}",
             on_enter=HideWindowAction()
         ))
         items.append(ExtensionResultItem(
             icon='images/disk.png',
             name=f"Disk: {disk.percent}%",
-            description=f"Used: {self._bytes_to_readable(disk.used)}GB / Total: {self._bytes_to_readable(disk.total)}GB",
+            description=f"Used: {self._bytes_to_readable(disk.used)} / Total: {self._bytes_to_readable(disk.total)}",
             on_enter=HideWindowAction()
         ))
         if battery:

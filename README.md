@@ -22,7 +22,10 @@ Ulauncher System Monitor is a Ulauncher extension that provides real‑time syst
 - [psutil](https://github.com/giampaolo/psutil)
 - [Netifaces](https://github.com/raphdg/netifaces)
 ## Installation
-
+- Install all required packages using pip:
+  ```bash
+  pip install psutil netifaces
+  ```
 - Open **Ulauncher**
 - Click on the **cog wheel** to open your preferences
 - Click on the **EXTENSIONS** tab

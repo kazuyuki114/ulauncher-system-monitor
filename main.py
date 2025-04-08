@@ -1,5 +1,4 @@
 import time
-from tkinter.tix import ROW
 import logging
 import psutil
 from NetworkConnectionDetector import NetworkConnectionDetector
@@ -10,7 +9,6 @@ from ulauncher.api.shared.item.ExtensionResultItem import ExtensionResultItem
 from ulauncher.api.shared.action.RenderResultListAction import RenderResultListAction
 from ulauncher.api.shared.action.HideWindowAction import HideWindowAction
 from ulauncher.api.shared.action.CopyToClipboardAction import CopyToClipboardAction
-from jedi.api.classes import Name
 
 logger = logging.getLogger(__name__)
 
@@ -61,25 +59,25 @@ class SystemMonitorEventListener(EventListener):
             icon='images/cpu.png',
             name=f"CPU: {cpu}% / Cores: {cpu_count}",
             description=f"Current: {round(cpu_stat.current,2)}MHz / Max: {round(cpu_stat.max,2)}MHz",
-            on_enter=HideWindowAction()
+            on_enter=CopyToClipboardAction(f"CPU: {cpu}% / Cores: {cpu_count} / Current: {round(cpu_stat.current,2)}MHz / Max: {round(cpu_stat.max,2)}MHz")
         ))
         items.append(ExtensionResultItem(
             icon='images/ram.png',
             name=f"Memory: {memory.percent}%",
             description=f"Used: {self._bytes_to_readable(memory.used)} / Total: {self._bytes_to_readable(memory.total)}",
-            on_enter=HideWindowAction()
+            on_enter=CopyToClipboardAction(f"Memory: {memory.percent}% / Used: {self._bytes_to_readable(memory.used)} / Total: {self._bytes_to_readable(memory.total)}")
         ))
         items.append(ExtensionResultItem(
             icon='images/swap.svg',
             name=f"Swap: {swap.percent}%",
             description=f"Used: {self._bytes_to_readable(swap.used)} / Total: {self._bytes_to_readable(swap.total)}",
-            on_enter=HideWindowAction()
+            on_enter=CopyToClipboardAction(f"Swap: {swap.percent}% / Used: {self._bytes_to_readable(swap.used)} / Total: {self._bytes_to_readable(swap.total)}")
         ))
         items.append(ExtensionResultItem(
             icon='images/disk.png',
             name=f"Disk: {disk.percent}%",
             description=f"Used: {self._bytes_to_readable(disk.used)} / Total: {self._bytes_to_readable(disk.total)}",
-            on_enter=HideWindowAction()
+            on_enter=CopyToClipboardAction(f"Disk: {disk.percent}% / Used: {self._bytes_to_readable(disk.used)} / Total: {self._bytes_to_readable(disk.total)}")
         ))
         if battery:
             # Check if secsleft is -1; if so, display "N/A", otherwise convert
@@ -87,21 +85,21 @@ class SystemMonitorEventListener(EventListener):
             items.append(ExtensionResultItem(
                 icon='images/battery.png',
                 name="Battery Status",
-                description=f"Battery: {round(battery.percent, 2)} / Time left: {time_left}",
-                on_enter=HideWindowAction()
+                description=f"Battery: {round(battery.percent, 2)}% / Time left: {time_left}",
+                on_enter=CopyToClipboardAction(f"Battery: {round(battery.percent, 2)}% / Time left: {time_left}")
             ))
 
         items.append(ExtensionResultItem(
             icon='images/network.png',
             name=f"Network: {conn_type}",
             description = f"Down: {self._bytes_to_readable(network_metrics['download_speed'])}/s / Up: {self._bytes_to_readable(network_metrics['upload_speed'])}/s",
-            on_enter=HideWindowAction()
+            on_enter=CopyToClipboardAction(f"Network: {conn_type} / Down: {self._bytes_to_readable(network_metrics['download_speed'])}/s / Up: {self._bytes_to_readable(network_metrics['upload_speed'])}/s")
         ))
         items.append(ExtensionResultItem(
             icon='images/uptime.png',
             name=f"Uptime: {uptime_str}",
             description="System uptime",
-            on_enter=HideWindowAction()
+            on_enter=CopyToClipboardAction(f"Uptime: {uptime_str}")
         ))
         return RenderResultListAction(items)
 

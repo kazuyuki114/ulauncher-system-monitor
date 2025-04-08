@@ -57,7 +57,7 @@ class SystemMonitorEventListener(EventListener):
         items.append(ExtensionResultItem(
             icon='images/cpu.png',
             name=f"CPU: {cpu}% / Cores: {cpu_count}",
-            description=f"Current:{cpu_stat.current}MHz/Min:{cpu_stat.min} MHz/Max{cpu_stat.max}MHz",
+            description=f"Current:{round(cpu_stat.current,2)}MHz/Min:{round(cpu_stat.min,2)} MHz/Max:{round(cpu_stat.max,2)}MHz",
             on_enter=HideWindowAction()
         ))
         items.append(ExtensionResultItem(
@@ -85,7 +85,7 @@ class SystemMonitorEventListener(EventListener):
         items.append(ExtensionResultItem(
             icon='images/network.png',
             name=f"Network: {conn_type}",
-            description = f"Download:{self._bytes_to_readable(network_metrics['download_speed'])}/s|Upload:{self._bytes_to_readable(network_metrics['upload_speed'])}/s",
+            description = f"Down:{self._bytes_to_readable(network_metrics['download_speed'])}/s|Up:{self._bytes_to_readable(network_metrics['upload_speed'])}/s",
             on_enter=HideWindowAction()
         ))
         items.append(ExtensionResultItem(

@@ -89,8 +89,7 @@ class SystemMonitorEventListener(EventListener):
         items.append(ExtensionResultItem(
             icon='images/network.png',
             name=f"Network: {conn_type}",
-            description = f"Download: {bytes_to_readable(network_metrics['download_speed'])}/s | Upload: {bytes_to_readable(network_metrics['upload_speed'])}/s | Total Received: {bytes_to_readable(network_metrics['total_downloaded'])} | Total Sent: {bytes_to_readable(network_metrics['total_uploaded'])}",
-            on_enter=HideWindowAction()
+            description = f"Download: {self._bytes_to_readable(network_metrics['download_speed'])}/s | Upload: {self._bytes_to_readable(network_metrics['upload_speed'])}/s | Total Received: {self._bytes_to_readable(network_metrics['total_downloaded'])} | Total Sent: {self._bytes_to_readable(network_metrics['total_uploaded'])}",            on_enter=HideWindowAction()
         ))
         items.append(ExtensionResultItem(
             icon='images/uptime.png',

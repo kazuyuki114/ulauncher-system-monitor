@@ -1,0 +1,26 @@
+{
+  "required_api_version": "3",
+  "name": "System Monitor",
+  "description": "Instantly view real‑time system metrics—including CPU, memory, disk usage,and battery status from Ulauncher for quick system health insights.",
+  "developer_name": "Kazuyuki",
+  "icon": "images/icon.svg",
+  "triggers": {
+    "copy": {
+      "name": "System Monitor",
+      "description": "Real‑time system metrics—including CPU, memory, disk usage and battery status",
+      "keyword": "sys"
+    }
+  },
+  "options": {
+    "query_debounce": 0.1
+  },
+  "preferences": [
+    {
+      "id": "demo_kw",
+      "type": "keyword",
+      "name": "Demo",
+      "description": "Demo extension",
+      "default_value": "dm"
+    }
+  ]
+}

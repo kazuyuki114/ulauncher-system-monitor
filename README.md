@@ -1,10 +1,10 @@
 # ulauncher-system-monitor
-Ulauncher System Monitor is a Ulauncher extension that provides real‑time system metrics directly within Ulauncher. Get an at‑a‑glance view of your CPU usage, memory consumption, disk usage, network activity, battery status, and uptime—all from one unified interface.
+Ulauncher System Monitor is a Ulauncher extension that provides real‑time system metrics directly within Ulauncher. Get an at‑a‑glance view of your CPU usage, memory consumption, swap usage, disk usage, network activity, battery status, and uptime—all from one unified interface.
 
 ## Features
 
 - **Real‑Time Metrics:**
-  Displays current CPU load, memory usage, disk space, network I/O, and uptime.
+  Displays current CPU load, memory usage, swap usage, disk space, network I/O, and uptime.
 
 - **Battery Status**
   Shows battery percentage and system uptime.

@@ -2,6 +2,7 @@ import time
 from tkinter.tix import ROW
 import logging
 import psutil
+from NetworkConnectionDetector import NetworkConnectionDetector
 from ulauncher.api.client.Extension import Extension
 from ulauncher.api.client.EventListener import EventListener
 from ulauncher.api.shared.event import KeywordQueryEvent, ItemEnterEvent, PreferencesEvent, PreferencesUpdateEvent
@@ -26,13 +27,43 @@ class SystemMonitorEventListener(EventListener):
 
         logger.info("Start extracting system metrics")
 
-        # Fetch system metrics using psutil
+        # CPU metrics
         cpu = psutil.cpu_percent(interval=1.0)
+        cpu_count = psutil.cpu_count(logical=True)
+        cpu_stat = psutil.cpu_freq()
+        
+        # Memory metrics
         memory = psutil.virtual_memory()
+        
+        # Disk metrics
         disk = psutil.disk_usage('/')
-        net = psutil.net_io_counters()
+        
+        # Network metrics
+        network_metrics = self._get_network_metrics(interval=1.0)
+        detector = NetworkConnectionDetector()
+        iface, conn_type = detector.detect_connection()
+        
+        # Battery metrics
         battery = psutil.sensors_battery() if hasattr(psutil, "sensors_battery") else None
-        # Optionally, gather uptime info (e.g., from psutil.boot_time())
+        
+        # Fan metrics
+        fans = psutil.sensors_fans() if hasattr(psutil, "sensors_fans") else None
+
+        total_speed = 0
+        fan_count = 0
+
+        # Iterate through the fan data
+        for source, fan_list in fans.items():
+            for fan in fan_list:
+                speed = fan.current
+                total_speed += speed
+                fan_count += 1
+        if fan_count > 0:
+            average_speed = total_speed / fan_count
+        else:
+            average_speed = 0.0
+            
+        # Uptime
         uptime_seconds = time.time() - psutil.boot_time()
         uptime_str = time.strftime("%H:%M:%S", time.gmtime(uptime_seconds))
 
@@ -42,20 +73,20 @@ class SystemMonitorEventListener(EventListener):
         items = []
         items.append(ExtensionResultItem(
             icon='images/cpu.png',
-            name=f"CPU: {cpu}%",
-            description=f"Current CPU usage",
+            name=f"CPU: {cpu}% / Cores: {cpu_count}",
+            description=f"Current frequency: {cpu_stat.current} MHz / Minimum frequency: {cpu_stat.min} MHz / Maximum frequency: {cpu_stat.max} MHz",
             on_enter=HideWindowAction()
         ))
         items.append(ExtensionResultItem(
             icon='images/ram.png',
             name=f"Memory: {memory.percent}%",
-            description=f"Used: {self._bytes_to_gb(memory.used)} / Total: {self._bytes_to_gb(memory.total)}",
+            description=f"Used: {self._bytes_to_readable(memory.used)}GB / Total: {self._bytes_to_readable(memory.total)}GB",
             on_enter=HideWindowAction()
         ))
         items.append(ExtensionResultItem(
             icon='images/disk.png',
             name=f"Disk: {disk.percent}%",
-            description=f"Used: {self._bytes_to_gb(disk.used)} / Total: {self._bytes_to_gb(disk.total)}",
+            description=f"Used: {self._bytes_to_readable(disk.used)}GB / Total: {self._bytes_to_readable(disk.total)}GB",
             on_enter=HideWindowAction()
         ))
         if battery:
@@ -67,17 +98,24 @@ class SystemMonitorEventListener(EventListener):
 
             items.append(ExtensionResultItem(
                 icon='images/battery.png',
-                name="Battery status",
+                name="Battery Status",
                 description=f"Battery: {round(battery.percent, 2)}%({mode}) | Time left: {time_left}",
                 on_enter=HideWindowAction()
             ))
 
         items.append(ExtensionResultItem(
             icon='images/network.png',
-            Name="Network activity",
-            description=f"Network: Sent {self._bytes_to_gb(round(net.bytes_sent, 2))}, Received {self._bytes_to_gb(round(net.bytes_recv, 2))}",
+            name=f"Network: {conn_type}",
+            description = f"Download: {bytes_to_readable(network_metrics['download_speed'])}/s | Upload: {bytes_to_readable(network_metrics['upload_speed'])}/s | Total Received: {bytes_to_readable(network_metrics['total_downloaded'])} | Total Sent: {bytes_to_readable(network_metrics['total_uploaded'])}"
             on_enter=HideWindowAction()
         ))
+        if fans:
+            items.append(ExtensionResultItem(
+                icon='images/fan.png',
+                name=f"Fan speed: {round(average_speed, 2)} RPM",
+                description="Extension information",
+                on_enter=HideWindowAction()
+            ))
         items.append(ExtensionResultItem(
             icon='images/uptime.png',
             name=f"Uptime: {uptime_str}",
@@ -86,14 +124,42 @@ class SystemMonitorEventListener(EventListener):
         ))
         return RenderResultListAction(items)
 
-    def _bytes_to_gb(self, num_bytes):
-        gb = num_bytes / (1024 * 1024 * 1024)
-        return f"{gb:.1f} GB"
+    def _bytes_to_readable(self, num_bytes):
+        """Convert bytes to a human-readable format."""
+        for unit in ['bytes', 'KB', 'MB', 'GB']:
+            if num_bytes < 1024:
+                return f"{num_bytes:.2f} {unit}"
+            num_bytes /= 1024
+        return f"{num_bytes:.2f} TB"
 
-    def _secs_to_hours(secs):
+    def _secs_to_hours(self, secs):
         mm, ss = divmod(secs, 60)
         hh, mm = divmod(mm, 60)
         return "%d:%02d:%02d" % (hh, mm, ss)
+
+    def _get_network_metrics(self, interval=1.0):
+        # Get initial counters
+        net1 = psutil.net_io_counters()
+        time.sleep(interval)
+        net2 = psutil.net_io_counters()
+
+        # Calculate speeds
+        bytes_sent = net2.bytes_sent - net1.bytes_sent
+        bytes_recv = net2.bytes_recv - net1.bytes_recv
+
+        upload_speed = bytes_sent / interval  # bytes/sec
+        download_speed = bytes_recv / interval  # bytes/sec
+
+        # Total traffic (since boot)
+        total_sent = net2.bytes_sent
+        total_recv = net2.bytes_recv
+
+        return {
+            "download_speed": download_speed,
+            "upload_speed": upload_speed,
+            "total_downloaded": total_recv,
+            "total_uploaded": total_sent
+        }
 
 class PreferencesEventListener(EventListener):
 	def on_event(self, event, extension):

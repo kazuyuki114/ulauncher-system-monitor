@@ -6,7 +6,7 @@ Ulauncher System Monitor is a Ulauncher extension that provides real‑time syst
 <p align="center">
   <img src="Screenshot.png" width="500" title="Extension Screenshot">
     <br>
-  <b>App Screenshot</b>
+  <b>Extension Screenshot</b>
 </p>
 
 ## Features

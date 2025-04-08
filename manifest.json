@@ -12,14 +12,14 @@
     }
   },
   "options": {
-    "query_debounce": 0.05
+    "query_debounce": 0.1
   },
   "preferences": [
     {
-      "id": "demo_kw",
+      "id": "recents_kw",
       "type": "keyword",
-      "name": "Demo",
-      "description": "Demo extension",
+      "name": "Keyword",
+      "description": "Change keyword",
       "default_value": "sys"
     }
   ]

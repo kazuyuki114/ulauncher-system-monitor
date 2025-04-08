@@ -1,6 +1,7 @@
 import time
 import logging
 import psutil
+import subprocess
 from NetworkConnectionDetector import NetworkConnectionDetector
 from ulauncher.api.client.Extension import Extension
 from ulauncher.api.client.EventListener import EventListener
@@ -9,6 +10,7 @@ from ulauncher.api.shared.item.ExtensionResultItem import ExtensionResultItem
 from ulauncher.api.shared.action.RenderResultListAction import RenderResultListAction
 from ulauncher.api.shared.action.HideWindowAction import HideWindowAction
 from ulauncher.api.shared.action.CopyToClipboardAction import CopyToClipboardAction
+from ulauncher.api.shared.action.ExtensionCustomAction import ExtensionCustomAction
 
 logger = logging.getLogger(__name__)
 
@@ -19,6 +21,7 @@ class SystemMonitorExtension(Extension):
         self.subscribe(KeywordQueryEvent, SystemMonitorEventListener())
         self.subscribe(PreferencesEvent, PreferencesEventListener())
         self.subscribe(PreferencesUpdateEvent, PreferencesEventListener())
+        self.subscribe(ItemEnterEvent, ExecuteOpenAction())
 
 class SystemMonitorEventListener(EventListener):
     def on_event(self, event, extension):
@@ -101,6 +104,13 @@ class SystemMonitorEventListener(EventListener):
             description="System uptime",
             on_enter=CopyToClipboardAction(f"Uptime: {uptime_str}")
         ))
+
+        items.append(ExtensionResultItem(
+            icon='images/icon.svg',
+            name="GNOME System Monitor",
+            description="Open GNOME System Monitor",
+            on_enter=ExtensionCustomAction()
+        ))
         return RenderResultListAction(items)
 
     def _bytes_to_readable(self,num_bytes):
@@ -149,6 +159,11 @@ class PreferencesUpdateEventListener(EventListener):
 	def on_event(self, event, extension):
 		if event.id == "recents_kw":
 			extension.keyword = event.new_value
+
+class ExecuteOpenAction(EventListener):
+    def on_event(self, event, extension):
+        subprocess.Popen(["gnome-system-monitor"])
+        return HideWindowAction()
 
 if __name__ == '__main__':
     SystemMonitorExtension().run()

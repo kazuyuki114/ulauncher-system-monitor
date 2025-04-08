@@ -55,7 +55,7 @@ class SystemMonitorEventListener(EventListener):
         uptime_str = time.strftime("%H:%M:%S", time.gmtime(uptime_seconds))
 
         logger.info("System metrics extracted")
-
+        data = {}
         # Create list items for Ulauncher to show
         items = []
         items.append(ExtensionResultItem(
@@ -109,7 +109,7 @@ class SystemMonitorEventListener(EventListener):
             icon='images/icon.svg',
             name="GNOME System Monitor",
             description="Open GNOME System Monitor",
-            on_enter=ExtensionCustomAction()
+            on_enter=ExtensionCustomAction(data, keep_app_open=False)
         ))
         return RenderResultListAction(items)
 

@@ -57,7 +57,7 @@ class SystemMonitorEventListener(EventListener):
         items.append(ExtensionResultItem(
             icon='images/cpu.png',
             name=f"CPU: {cpu}% / Cores: {cpu_count}",
-            description=f"Current frequency: {cpu_stat.current} MHz / Minimum frequency: {cpu_stat.min} MHz / Maximum frequency: {cpu_stat.max} MHz",
+            description=f"Current:{cpu_stat.current}MHz/Min:{cpu_stat.min} MHz/Max{cpu_stat.max}MHz",
             on_enter=HideWindowAction()
         ))
         items.append(ExtensionResultItem(
@@ -73,23 +73,20 @@ class SystemMonitorEventListener(EventListener):
             on_enter=HideWindowAction()
         ))
         if battery:
-            # Determine power mode based on battery.power_plugged boolean
-            mode = "Plugged In" if battery.power_plugged else "On Battery"
-
             # Check if secsleft is -1; if so, display "N/A", otherwise convert
             time_left = "N/A" if battery.secsleft == -1 else self._secs_to_hours(battery.secsleft)
-
             items.append(ExtensionResultItem(
                 icon='images/battery.png',
                 name="Battery Status",
-                description=f"Battery: {round(battery.percent, 2)}%({mode}) | Time left: {time_left}",
+                description=f"Battery:{round(battery.percent, 2)}%| Time left: {time_left}",
                 on_enter=HideWindowAction()
             ))
 
         items.append(ExtensionResultItem(
             icon='images/network.png',
             name=f"Network: {conn_type}",
-            description = f"Download: {self._bytes_to_readable(network_metrics['download_speed'])}/s | Upload: {self._bytes_to_readable(network_metrics['upload_speed'])}/s | Total Received: {self._bytes_to_readable(network_metrics['total_downloaded'])} | Total Sent: {self._bytes_to_readable(network_metrics['total_uploaded'])}",            on_enter=HideWindowAction()
+            description = f"Download:{self._bytes_to_readable(network_metrics['download_speed'])}/s|Upload:{self._bytes_to_readable(network_metrics['upload_speed'])}/s",
+            on_enter=HideWindowAction()
         ))
         items.append(ExtensionResultItem(
             icon='images/uptime.png',

@@ -31,21 +31,21 @@ class SystemMonitorEventListener(EventListener):
         cpu = psutil.cpu_percent(interval=1.0)
         cpu_count = psutil.cpu_count(logical=True)
         cpu_stat = psutil.cpu_freq()
-        
+
         # Memory metrics
         memory = psutil.virtual_memory()
-        
+
         # Disk metrics
         disk = psutil.disk_usage('/')
-        
+
         # Network metrics
         network_metrics = self._get_network_metrics(interval=1.0)
         detector = NetworkConnectionDetector()
         iface, conn_type = detector.detect_connection()
-        
+
         # Battery metrics
         battery = psutil.sensors_battery() if hasattr(psutil, "sensors_battery") else None
-            
+
         # Uptime
         uptime_seconds = time.time() - psutil.boot_time()
         uptime_str = time.strftime("%H:%M:%S", time.gmtime(uptime_seconds))
@@ -89,7 +89,7 @@ class SystemMonitorEventListener(EventListener):
         items.append(ExtensionResultItem(
             icon='images/network.png',
             name=f"Network: {conn_type}",
-            description = f"Download: {bytes_to_readable(network_metrics['download_speed'])}/s | Upload: {bytes_to_readable(network_metrics['upload_speed'])}/s | Total Received: {bytes_to_readable(network_metrics['total_downloaded'])} | Total Sent: {bytes_to_readable(network_metrics['total_uploaded'])}"
+            description = f"Download: {bytes_to_readable(network_metrics['download_speed'])}/s | Upload: {bytes_to_readable(network_metrics['upload_speed'])}/s | Total Received: {bytes_to_readable(network_metrics['total_downloaded'])} | Total Sent: {bytes_to_readable(network_metrics['total_uploaded'])}",
             on_enter=HideWindowAction()
         ))
         items.append(ExtensionResultItem(
@@ -100,7 +100,7 @@ class SystemMonitorEventListener(EventListener):
         ))
         return RenderResultListAction(items)
 
-    def _bytes_to_readable(self, num_bytes):
+    def _bytes_to_readable(self,num_bytes):
         """Convert bytes to a human-readable format."""
         for unit in ['bytes', 'KB', 'MB', 'GB']:
             if num_bytes < 1024:

@@ -1,6 +1,4 @@
 import psutil
-import platform
-import time
 from ulauncher.api.client.Extension import Extension
 from ulauncher.api.client.EventListener import EventListener
 from ulauncher.api.shared.event import KeywordQueryEvent, ItemEnterEvent
@@ -29,29 +27,33 @@ class SystemMonitorEventListener(EventListener):
             icon='images/cpu.png',
             name=f"CPU: {cpu}%",
             description=f"Current CPU usage",
+            on_enter=HideWindowAction()
         ))
         items.append(ExtensionResultItem(
             icon='images/ram.png',
             name=f"Memory: {memory.percent}%",
             description=f"Used: {self._bytes_to_mb(memory.used)} / Total: {self._bytes_to_mb(memory.total)}",
+            on_enter=HideWindowAction()
         ))
         items.append(ExtensionResultItem(
             icon='images/disk.png',
             name=f"Disk: {disk.percent}%",
             description=f"Used: {self._bytes_to_mb(disk.used)} / Total: {self._bytes_to_mb(disk.total)}",
+            on_enter=HideWindowAction()
         ))
         if battery:
             items.append(ExtensionResultItem(
                 icon='images/battery.png',
                 name=f"Battery: {battery.percent}%",
                 description="Battery status",
+                on_enter=HideWindowAction()
             ))
 
-        # You could also add a network info item if desired
         items.append(ExtensionResultItem(
             icon='images/network.png',
             name=f"Network: Sent {self._bytes_to_mb(net.bytes_sent)}, Received {self._bytes_to_mb(net.bytes_recv)}",
             description="Network activity",
+            on_enter=HideWindowAction()
         ))
 
         return RenderResultListAction(items)

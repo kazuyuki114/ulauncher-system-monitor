@@ -1,5 +1,5 @@
 {
-  "required_api_version": "3",
+  "required_api_version": "^2.0.0",
   "name": "System Monitor",
   "description": "Instantly view real‑time system metrics—including CPU, memory, disk usage,and battery status from Ulauncher for quick system health insights.",
   "developer_name": "Kazuyuki",
@@ -12,7 +12,7 @@
     }
   },
   "options": {
-    "query_debounce": 0.1
+    "query_debounce": 0.05
   },
   "preferences": [
     {
@@ -20,7 +20,7 @@
       "type": "keyword",
       "name": "Demo",
       "description": "Demo extension",
-      "default_value": "dm"
+      "default_value": "sys"
     }
   ]
 }

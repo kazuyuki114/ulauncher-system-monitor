@@ -45,23 +45,6 @@ class SystemMonitorEventListener(EventListener):
         
         # Battery metrics
         battery = psutil.sensors_battery() if hasattr(psutil, "sensors_battery") else None
-        
-        # Fan metrics
-        fans = psutil.sensors_fans() if hasattr(psutil, "sensors_fans") else None
-
-        total_speed = 0
-        fan_count = 0
-
-        # Iterate through the fan data
-        for source, fan_list in fans.items():
-            for fan in fan_list:
-                speed = fan.current
-                total_speed += speed
-                fan_count += 1
-        if fan_count > 0:
-            average_speed = total_speed / fan_count
-        else:
-            average_speed = 0.0
             
         # Uptime
         uptime_seconds = time.time() - psutil.boot_time()
@@ -109,13 +92,6 @@ class SystemMonitorEventListener(EventListener):
             description = f"Download: {bytes_to_readable(network_metrics['download_speed'])}/s | Upload: {bytes_to_readable(network_metrics['upload_speed'])}/s | Total Received: {bytes_to_readable(network_metrics['total_downloaded'])} | Total Sent: {bytes_to_readable(network_metrics['total_uploaded'])}"
             on_enter=HideWindowAction()
         ))
-        if fans:
-            items.append(ExtensionResultItem(
-                icon='images/fan.png',
-                name=f"Fan speed: {round(average_speed, 2)} RPM",
-                description="Extension information",
-                on_enter=HideWindowAction()
-            ))
         items.append(ExtensionResultItem(
             icon='images/uptime.png',
             name=f"Uptime: {uptime_str}",
